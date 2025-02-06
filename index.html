@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+        }
+        .output {
+            margin-top: 20px;
+            font-size: 1.5em;
+        }
+        .options {
+            margin-top: 20px;
+        }
+        .options label {
+            display: block;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Password Generator</h1>
+        <div class="options">
+            <label>
+                <input type="checkbox" id="includeCaps"> Include Capital Letters
+            </label>
+            <label>
+                <input type="checkbox" id="includeSpecial"> Include Special Characters
+            </label>
+            <label>
+                <input type="checkbox" id="includeNumbers"> Include Numbers
+            </label>
+            <label>
+                Length: <input type="number" id="length" value="12" min="4" max="32">
+            </label>
+            <button onclick="generatePassword()">Generate Password</button>
+        </div>
+        <div class="output" id="passwordOutput"></div>
+    </div>
+
+    <script>
+        function generatePassword() {
+            const length = document.getElementById('length').value;
+            const includeCaps = document.getElementById('includeCaps').checked;
+            const includeSpecial = document.getElementById('includeSpecial').checked;
+            const includeNumbers = document.getElementById('includeNumbers').checked;
+            
+            let chars = 'abcdefghijklmnopqrstuvwxyz';
+            if (includeCaps) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            if (includeSpecial) chars += '!@#$%^&*()_+~`|}{[]:;?><,./-=';
+            if (includeNumbers) chars += '0123456789';
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * chars.length);
+                password += chars[randomIndex];
+            }
+            
+            document.getElementById('passwordOutput').innerText = password;
+        }
+    </script>
+</body>
+</html>

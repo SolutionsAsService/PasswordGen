@@ -22,10 +22,15 @@
             <label>
                 Length: <input type="number" id="length" value="12" min="4" max="32">
             </label>
-            <button onclick="generatePassword()">Generate Password</button>
+            <button id="generate-btn">Generate Password</button>
         </div>
         <div class="output" id="passwordOutput"></div>
     </div>
+
+    <!-- Dark Mode Switcher at Bottom -->
+    <footer>
+        <button class="theme-switch" id="theme-switcher">Toggle Dark/Light Mode</button>
+    </footer>
 
     <script src="script.js"></script>
 </body>

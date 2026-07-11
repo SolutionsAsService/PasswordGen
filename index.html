@@ -1,37 +1,324 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Generator</title>
-    <link rel="stylesheet" href="styles.css">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Secure Password Generator | Advanced Password Security Tool</title>
+
+<meta name="description" content="Generate strong secure passwords with customizable length, numbers, symbols, and uppercase characters.">
+
+<link rel="stylesheet" href="style.css">
+
 </head>
+
+
 <body>
-    <div class="container">
-        <h1>Password Generator</h1>
-        <div class="options">
-            <label>
-                <input type="checkbox" id="includeCaps"> Include Capital Letters
-            </label>
-            <label>
-                <input type="checkbox" id="includeSpecial"> Include Special Characters
-            </label>
-            <label>
-                <input type="checkbox" id="includeNumbers"> Include Numbers
-            </label>
-            <label>
-                Length: <input type="number" id="length" value="12" min="4" max="32">
-            </label>
-            <button id="generate-btn">Generate Password</button>
-        </div>
-        <div class="output" id="passwordOutput"></div>
+
+
+<!-- HEADER -->
+
+<header class="header">
+
+    <div class="logo">
+        🔐 SecurePass
     </div>
 
-    <!-- Dark Mode Switcher at Bottom -->
-    <footer>
-        <button class="theme-switch" id="theme-switcher">Toggle Dark/Light Mode</button>
-    </footer>
 
-    <script src="script.js"></script>
+    <button id="theme-switcher" class="theme-btn">
+        🌙 Toggle Theme
+    </button>
+
+</header>
+
+
+
+
+<!-- MAIN -->
+
+<main class="container">
+
+
+<section class="hero">
+
+<h1>
+Advanced Password Generator
+</h1>
+
+<p>
+Create cryptographically secure passwords using advanced random generation.
+</p>
+
+</section>
+
+
+
+
+
+<section class="generator-card">
+
+
+<h2>
+Generate Secure Password
+</h2>
+
+
+
+<div class="password-box">
+
+
+<input 
+id="passwordOutput"
+readonly
+placeholder="Your password will appear here..."
+>
+
+
+<button id="copy-btn">
+Copy
+</button>
+
+
+</div>
+
+
+
+
+<div id="passwordStrength" class="strength">
+Strength: Waiting...
+</div>
+
+
+
+
+
+<!-- LENGTH -->
+
+
+<div class="setting">
+
+
+<label for="length">
+
+Password Length:
+
+<span id="lengthValue">
+16
+</span>
+
+</label>
+
+
+<input
+type="range"
+id="length"
+min="6"
+max="64"
+value="16"
+>
+
+
+</div>
+
+
+
+
+
+<!-- OPTIONS -->
+
+
+<div class="options">
+
+
+<label class="option">
+
+<input 
+type="checkbox"
+id="includeCaps"
+checked
+>
+
+Include Uppercase Letters
+
+</label>
+
+
+
+
+<label class="option">
+
+<input 
+type="checkbox"
+id="includeNumbers"
+checked
+>
+
+Include Numbers
+
+</label>
+
+
+
+
+<label class="option">
+
+<input 
+type="checkbox"
+id="includeSpecial"
+checked
+>
+
+Include Special Characters
+
+</label>
+
+
+
+</div>
+
+
+
+
+
+<button 
+id="generate-btn"
+class="generate">
+
+Generate Password
+
+</button>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<!-- SECURITY INFO -->
+
+
+<section class="info">
+
+
+<h2>
+Why Use A Secure Password Generator?
+</h2>
+
+
+<div class="features">
+
+
+<div class="feature">
+
+<h3>
+🛡 Strong Encryption
+</h3>
+
+<p>
+Uses your browser's secure cryptographic random number generator instead of predictable randomness.
+</p>
+
+</div>
+
+
+
+
+<div class="feature">
+
+<h3>
+⚡ Instant Generation
+</h3>
+
+<p>
+Passwords are created locally on your device and are never transmitted online.
+</p>
+
+</div>
+
+
+
+
+
+<div class="feature">
+
+<h3>
+🔑 Custom Requirements
+</h3>
+
+<p>
+Guarantees uppercase letters, numbers, and special characters when enabled.
+</p>
+
+</div>
+
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+
+</main>
+
+
+
+
+
+<footer>
+
+<p>
+© 2026 SecurePass — Local Password Generation Tool
+</p>
+
+</footer>
+
+
+
+
+
+<script src="script.js"></script>
+
+
+<script>
+
+
+// Update slider number live
+
+const slider =
+document.getElementById("length");
+
+
+const lengthValue =
+document.getElementById("lengthValue");
+
+
+slider.addEventListener(
+"input",
+()=>{
+
+lengthValue.innerText =
+slider.value;
+
+});
+
+
+</script>
+
+
+
 </body>
+
 </html>

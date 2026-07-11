@@ -1,309 +1,133 @@
-document.addEventListener("DOMContentLoaded", () => {
+function generatePassword() {
 
-    /* ================================
-       THEME SYSTEM
-    ================================= */
+    let length = parseInt(
+        document.getElementById("length").value
+    );
 
-    const themeToggle = document.getElementById("theme-switcher");
-    const body = document.body;
 
-    // Load saved theme
-    if (localStorage.getItem("theme") === "dark") {
-        body.classList.add("dark-mode");
-    }
+    const includeCaps =
+        document.getElementById("includeCaps").checked;
 
-    if (themeToggle) {
-        themeToggle.addEventListener("click", () => {
+    const includeSpecial =
+        document.getElementById("includeSpecial").checked;
 
-            body.classList.toggle("dark-mode");
+    const includeNumbers =
+        document.getElementById("includeNumbers").checked;
 
-            const theme = body.classList.contains("dark-mode")
-                ? "dark"
-                : "light";
 
-            localStorage.setItem("theme", theme);
-        });
+
+    // Minimum password length
+    if (length < 4) {
+        length = 4;
     }
 
 
-    /* ================================
-       PASSWORD GENERATOR
-    ================================= */
 
-    const generateButton = document.getElementById("generate-btn");
-    const passwordOutput = document.getElementById("passwordOutput");
+    const lowercase =
+        "abcdefghijklmnopqrstuvwxyz";
 
-    if (generateButton) {
-        generateButton.addEventListener("click", generatePassword);
+    const uppercase =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    const numbers =
+        "0123456789";
+
+    const special =
+        "!@#$%^&*()_+{}[]<>?/";
+
+
+
+    let requiredCharacters = [];
+
+    let characterPool = lowercase;
+
+
+
+    // FORCE REQUIRED CHARACTERS FIRST
+
+    if (includeCaps) {
+
+        requiredCharacters.push(
+            randomCharacter(uppercase)
+        );
+
+        characterPool += uppercase;
     }
 
 
-    function secureRandom(max) {
-        const array = new Uint32Array(1);
-        crypto.getRandomValues(array);
 
-        return array[0] % max;
+    if (includeNumbers) {
+
+        requiredCharacters.push(
+            randomCharacter(numbers)
+        );
+
+        characterPool += numbers;
     }
 
 
-    function randomCharacter(chars) {
-        return chars[secureRandom(chars.length)];
+
+    if (includeSpecial) {
+
+        requiredCharacters.push(
+            randomCharacter(special)
+        );
+
+        characterPool += special;
     }
 
 
-    function shuffleArray(array) {
 
-        for (let i = array.length - 1; i > 0; i--) {
+    /*
+       If requirements exceed length,
+       expand password automatically
+    */
 
-            const j = secureRandom(i + 1);
+    if (length < requiredCharacters.length) {
 
-            [
-                array[i],
-                array[j]
-            ] =
-            [
-                array[j],
-                array[i]
-            ];
-        }
-
-        return array;
-    }
-
-
-    function generatePassword() {
-
-
-        let length =
-            parseInt(
-                document.getElementById("length").value
-            );
-
-
-        const includeCaps =
-            document.getElementById("includeCaps").checked;
-
-        const includeSpecial =
-            document.getElementById("includeSpecial").checked;
-
-        const includeNumbers =
-            document.getElementById("includeNumbers").checked;
-
-
-
-        // Character pools
-
-        const lowercase =
-            "abcdefghijklmnopqrstuvwxyz";
-
-        const uppercase =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-        const numbers =
-            "0123456789";
-
-        const special =
-            "!@#$%^&*()_+~`|{}[]:;<>?,./-=";
-
-
-
-        let allowedCharacters = lowercase;
-
-        let passwordCharacters = [];
-
-
-
-        /*
-            Always guarantee selected requirements
-        */
-
-
-        if (includeCaps) {
-
-            allowedCharacters += uppercase;
-
-            passwordCharacters.push(
-                randomCharacter(uppercase)
-            );
-        }
-
-
-        if (includeNumbers) {
-
-            allowedCharacters += numbers;
-
-            passwordCharacters.push(
-                randomCharacter(numbers)
-            );
-        }
-
-
-        if (includeSpecial) {
-
-            allowedCharacters += special;
-
-            passwordCharacters.push(
-                randomCharacter(special)
-            );
-        }
-
-
-
-        allowedCharacters += lowercase;
-
-
-
-        // Minimum length check
-
-        if (length < passwordCharacters.length) {
-
-            length = passwordCharacters.length;
-
-            alert(
-                `Password length increased to ${length} to satisfy your requirements.`
-            );
-        }
-
-
-
-        // Fill remaining characters
-
-        while (passwordCharacters.length < length) {
-
-            passwordCharacters.push(
-                randomCharacter(allowedCharacters)
-            );
-
-        }
-
-
-
-        // Randomize final password
-
-        passwordCharacters =
-            shuffleArray(passwordCharacters);
-
-
-
-        const password =
-            passwordCharacters.join("");
-
-
-
-        passwordOutput.innerText = password;
-
-
-
-        updateStrength(password);
+        length = requiredCharacters.length;
 
     }
 
 
 
-    /* ================================
-       PASSWORD STRENGTH
-    ================================= */
-
-    function updateStrength(password) {
-
-
-        const strengthDisplay =
-            document.getElementById("passwordStrength");
-
-
-        if (!strengthDisplay)
-            return;
+    let password = [
+        ...requiredCharacters
+    ];
 
 
 
-        let score = 0;
+    // Fill remaining spots
 
+    while(password.length < length){
 
-        if (password.length >= 8)
-            score++;
-
-        if (password.length >= 12)
-            score++;
-
-        if (/[A-Z]/.test(password))
-            score++;
-
-        if (/[0-9]/.test(password))
-            score++;
-
-        if (/[^A-Za-z0-9]/.test(password))
-            score++;
-
-
-
-        const levels = [
-
-            "Very Weak",
-
-            "Weak",
-
-            "Medium",
-
-            "Strong",
-
-            "Very Strong",
-
-            "Excellent"
-
-        ];
-
-
-        strengthDisplay.innerText =
-            "Strength: " +
-            levels[score];
-
-    }
-
-
-
-    /* ================================
-       COPY PASSWORD BUTTON
-    ================================= */
-
-
-    const copyButton =
-        document.getElementById("copy-btn");
-
-
-    if(copyButton){
-
-        copyButton.addEventListener(
-            "click",
-            async () => {
-
-
-                const password =
-                    passwordOutput.innerText;
-
-
-                if(!password)
-                    return;
-
-
-                await navigator.clipboard.writeText(password);
-
-
-                copyButton.innerText =
-                    "Copied!";
-
-
-                setTimeout(()=>{
-
-                    copyButton.innerText =
-                        "Copy";
-
-                },1500);
-
-
-            }
+        password.push(
+            randomCharacter(characterPool)
         );
 
     }
 
 
-});
+
+    // Shuffle final password
+
+    password =
+        shuffleArray(password);
+
+
+
+    const finalPassword =
+        password.join("");
+
+
+
+    passwordOutput.innerText =
+        finalPassword;
+
+
+
+    updateStrength(finalPassword);
+
+
+
+}

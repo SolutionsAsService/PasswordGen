@@ -1,105 +1,97 @@
+/**
+ * Generate Password
+ * Always guarantees every selected character type exists.
+ */
 function generatePassword() {
 
-    let length = parseInt(
-        document.getElementById("length").value
-    );
+    const lengthInput = document.getElementById("length");
 
+    let length = parseInt(lengthInput.value, 10) || 12;
 
     const includeCaps =
         document.getElementById("includeCaps").checked;
 
-    const includeSpecial =
-        document.getElementById("includeSpecial").checked;
-
     const includeNumbers =
         document.getElementById("includeNumbers").checked;
 
+    const includeSpecial =
+        document.getElementById("includeSpecial").checked;
 
 
-    // Minimum password length
-    if (length < 4) {
-        length = 4;
-    }
-
-
-
-    const lowercase =
+    // Character Sets
+    const LOWERCASE =
         "abcdefghijklmnopqrstuvwxyz";
 
-    const uppercase =
+    const UPPERCASE =
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    const numbers =
+    const NUMBERS =
         "0123456789";
 
-    const special =
-        "!@#$%^&*()_+{}[]<>?/";
+    const SPECIAL =
+        "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
 
+    //-------------------------------------
+    // Build Required Sets
+    //-------------------------------------
 
-    let requiredCharacters = [];
-
-    let characterPool = lowercase;
-
-
-
-    // FORCE REQUIRED CHARACTERS FIRST
+    const requiredSets = [];
+    let characterPool = LOWERCASE;
 
     if (includeCaps) {
-
-        requiredCharacters.push(
-            randomCharacter(uppercase)
-        );
-
-        characterPool += uppercase;
+        requiredSets.push(UPPERCASE);
+        characterPool += UPPERCASE;
     }
-
-
 
     if (includeNumbers) {
-
-        requiredCharacters.push(
-            randomCharacter(numbers)
-        );
-
-        characterPool += numbers;
+        requiredSets.push(NUMBERS);
+        characterPool += NUMBERS;
     }
-
-
 
     if (includeSpecial) {
-
-        requiredCharacters.push(
-            randomCharacter(special)
-        );
-
-        characterPool += special;
+        requiredSets.push(SPECIAL);
+        characterPool += SPECIAL;
     }
 
 
+    //-------------------------------------
+    // Minimum Length
+    //-------------------------------------
 
-    /*
-       If requirements exceed length,
-       expand password automatically
-    */
+    const minimumLength =
+        Math.max(4, requiredSets.length + 1);
 
-    if (length < requiredCharacters.length) {
+    if (length < minimumLength) {
 
-        length = requiredCharacters.length;
+        length = minimumLength;
+        lengthInput.value = minimumLength;
 
     }
 
 
+    //-------------------------------------
+    // Start Password
+    //-------------------------------------
 
-    let password = [
-        ...requiredCharacters
-    ];
+    const password = [];
 
 
+    // Always include one lowercase
+    password.push(randomCharacter(LOWERCASE));
 
-    // Fill remaining spots
 
-    while(password.length < length){
+    // Force every selected set
+    requiredSets.forEach(set => {
+        password.push(randomCharacter(set));
+    });
+
+
+    //-------------------------------------
+    // Fill Remaining Characters
+    //-------------------------------------
+
+    while (password.length < length) {
 
         password.push(
             randomCharacter(characterPool)
@@ -108,26 +100,58 @@ function generatePassword() {
     }
 
 
+    //-------------------------------------
+    // Shuffle
+    //-------------------------------------
 
-    // Shuffle final password
-
-    password =
-        shuffleArray(password);
-
-
+    shuffleArray(password);
 
     const finalPassword =
         password.join("");
 
-
-
-    passwordOutput.innerText =
-        finalPassword;
-
-
+    passwordOutput.innerText = finalPassword;
 
     updateStrength(finalPassword);
 
+}
 
+
+
+/**
+ * Cryptographically Secure Random Character
+ */
+function randomCharacter(characters) {
+
+    const random = new Uint32Array(1);
+
+    crypto.getRandomValues(random);
+
+    return characters[
+        random[0] % characters.length
+    ];
+
+}
+
+
+
+/**
+ * Fisher-Yates Shuffle (Secure)
+ */
+function shuffleArray(array) {
+
+    for (let i = array.length - 1; i > 0; i--) {
+
+        const random = new Uint32Array(1);
+
+        crypto.getRandomValues(random);
+
+        const j = random[0] % (i + 1);
+
+        [array[i], array[j]] =
+            [array[j], array[i]];
+
+    }
+
+    return array;
 
 }

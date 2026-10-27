@@ -1,0 +1,236 @@
+/* Design tokens and base. Dark first, one accent, and a monospace voice for
+   anything the reader has to copy character by character.
+   No @import and no webfont: this stylesheet pulls in nothing, which is what
+   lets the site claim that nothing leaves the page. */
+
+:root {
+  /* Type: ratio 1.25. */
+  --t--1: 0.8rem;
+  --t-0: 1rem;
+  --t-1: 1.25rem;
+  --t-2: 1.563rem;
+  --t-3: 1.953rem;
+
+  /* Baseline unit; vertical space is a multiple of it. */
+  --u: 0.5rem;
+
+  --font-mono: ui-monospace, "Cascadia Mono", "SFMono-Regular", "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  --font-text: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --paper: #14120e;
+  --card: #1d1a14;
+  --raised: #241f18;
+  --ink: #ede6d6;
+  --muted: #a9a294;
+  --rule: #39332a;
+  --accent: #ee7a54;
+  --accent-ink: #14120e;
+
+  --weak: #e0603f;
+  --fair: #d9a13b;
+  --strong: #8fb04a;
+  --excellent: #5aa37a;
+
+  --digit: #7fb3d5;
+  --symbol: #c98fb0;
+  --upper: #e8c07a;
+
+  --radius: 3px;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --paper: #f0e9dc;
+  --card: #f7f2e8;
+  --raised: #e8e0cf;
+  --ink: #1b1814;
+  --muted: #564f42;
+  --rule: #c9bfab;
+  --accent: #a8321a;
+  --accent-ink: #f7f2e8;
+
+  --weak: #a8321a;
+  --fair: #8a5a10;
+  --strong: #4d6b1f;
+  --excellent: #2c6144;
+
+  --digit: #1f4f70;
+  --symbol: #7a2f56;
+  --upper: #7a5310;
+
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--t-0);
+  line-height: 1.5;
+  transition: background-color 120ms linear, color 120ms linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.skip {
+  position: absolute;
+  left: var(--u);
+  top: var(--u);
+  transform: translateY(-200%);
+  z-index: 40;
+  background: var(--card);
+  color: var(--ink);
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 2);
+  border: 2px solid var(--accent);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.skip:focus {
+  transform: none;
+}
+
+/* ----------------------------------------------------------------- layout */
+
+.wrap {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: calc(var(--u) * 3);
+}
+
+@media (max-width: 30rem) {
+  .wrap {
+    padding-inline: calc(var(--u) * 2);
+  }
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--u) * 2);
+  padding: calc(var(--u) * 2) calc(var(--u) * 3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--u);
+  font-family: var(--font-mono);
+  font-size: var(--t-1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.brandMark {
+  color: var(--accent);
+}
+
+.hero {
+  padding-block: calc(var(--u) * 8) calc(var(--u) * 5);
+}
+
+.hero h1 {
+  font-family: var(--font-mono);
+  font-size: var(--t-3);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  margin: 0 0 calc(var(--u) * 3);
+}
+
+.lede {
+  font-size: var(--t-1);
+  color: var(--muted);
+  max-width: 38ch;
+  margin: 0;
+}
+
+/* ------------------------------------------------------------------ notes */
+
+.notes {
+  padding-block: calc(var(--u) * 8);
+}
+
+.notes h2 {
+  font-family: var(--font-mono);
+  font-size: var(--t-1);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: calc(var(--u) * 3);
+}
+
+.noteGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: calc(var(--u) * 3);
+}
+
+.note h3 {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: var(--u);
+}
+
+.note p {
+  font-size: var(--t--1);
+  color: var(--muted);
+  margin: 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+/* ----------------------------------------------------------------- footer */
+
+.footer {
+  border-top: 1px solid var(--rule);
+  padding-block: calc(var(--u) * 4);
+}
+
+.footer p {
+  margin: 0;
+  font-size: var(--t--1);
+  color: var(--muted);
+}
+
+.footer a {
+  color: var(--accent);
+}
+
+@media print {
+  .masthead,
+  .notes {
+    display: none;
+  }
+}

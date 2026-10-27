@@ -1,841 +1,494 @@
-/* ==========================================================================
-   SecurePass - Geist Inspired Design System
-   ========================================================================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&display=swap');
-
-
-/* ==========================================================================
-   Theme Variables
-   ========================================================================== */
+/* SecurePass — SolutionsAsService
+   Dark first, one accent, and a monospace voice for anything the reader has to
+   copy character by character. Tokens are declared once; both themes spend them.
+   No external requests: this stylesheet pulls in nothing, which is what lets the
+   page claim that nothing leaves it. */
 
 :root {
+  /* Type: ratio 1.25. */
+  --t--1: 0.8rem;
+  --t-0: 1rem;
+  --t-1: 1.25rem;
+  --t-2: 1.563rem;
+  --t-3: 1.953rem;
 
-    --background:
-        #fafafa;
+  /* Baseline unit; vertical space is a multiple of it. */
+  --u: 0.5rem;
 
-    --foreground:
-        #0a0a0a;
+  --font-mono: ui-monospace, "Cascadia Mono", "SFMono-Regular", "SF Mono", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+  --font-text: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-    --card:
-        rgba(255,255,255,0.8);
+  --paper: #14120e;
+  --card: #1d1a14;
+  --raised: #241f18;
+  --ink: #ede6d6;
+  --muted: #a9a294;
+  --rule: #39332a;
+  --accent: #ee7a54;
+  --accent-ink: #14120e;
 
-    --card-border:
-        rgba(0,0,0,0.08);
+  --weak: #e0603f;
+  --fair: #d9a13b;
+  --strong: #8fb04a;
+  --excellent: #5aa37a;
 
-    --muted:
-        #666666;
+  --digit: #7fb3d5;
+  --symbol: #c98fb0;
+  --upper: #e8c07a;
 
-    --input:
-        #f5f5f5;
+  --radius: 3px;
 
-    --button:
-        #000000;
-
-    --button-text:
-        #ffffff;
-
-    --shadow:
-        rgba(0,0,0,0.08);
-
-    --radius:
-        16px;
-
-    --transition:
-        0.25s ease;
-
-
+  color-scheme: dark;
 }
 
+[data-theme="light"] {
+  --paper: #f0e9dc;
+  --card: #f7f2e8;
+  --raised: #e8e0cf;
+  --ink: #1b1814;
+  --muted: #564f42;
+  --rule: #c9bfab;
+  --accent: #a8321a;
+  --accent-ink: #f7f2e8;
 
+  --weak: #a8321a;
+  --fair: #8a5a10;
+  --strong: #4d6b1f;
+  --excellent: #2c6144;
 
-.dark-mode {
+  --digit: #1f4f70;
+  --symbol: #7a2f56;
+  --upper: #7a5310;
 
-
-    --background:
-        #000000;
-
-
-    --foreground:
-        #ffffff;
-
-
-    --card:
-        rgba(15,15,15,0.85);
-
-
-    --card-border:
-        rgba(255,255,255,0.12);
-
-
-    --muted:
-        #999999;
-
-
-    --input:
-        #111111;
-
-
-    --button:
-        #ffffff;
-
-
-    --button-text:
-        #000000;
-
-
-    --shadow:
-        rgba(0,0,0,0.5);
-
+  color-scheme: light;
 }
 
-
-
-
-
-/* ==========================================================================
-   Reset
-   ========================================================================== */
-
-
-* {
-
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-
-
-html {
-
-    scroll-behavior:smooth;
-
-}
-
-
 
 body {
-
-
-    min-height:100vh;
-
-    font-family:
-    "Inter",
-    Arial,
-    sans-serif;
-
-
-    background:
-    var(--background);
-
-
-    color:
-    var(--foreground);
-
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
-
-
-    transition:
-    background var(--transition),
-    color var(--transition);
-
-
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--t-0);
+  line-height: 1.5;
+  transition: background-color 120ms linear, color 120ms linear;
 }
 
-
-
-/* ==========================================================================
-   Background Effect
-   ========================================================================== */
-
-
-body::before {
-
-
-    content:"";
-
-
-    position:fixed;
-
-
-    inset:0;
-
-
-    background:
-
-    radial-gradient(
-        circle at top,
-        rgba(0,0,0,0.05),
-        transparent 40%
-    );
-
-
-    pointer-events:none;
-
-
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
 }
 
-
-.dark-mode body::before {
-
-
-    background:
-
-    radial-gradient(
-        circle at top,
-        rgba(255,255,255,0.08),
-        transparent 40%
-    );
-
-
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
 }
 
+/* ------------------------------------------------------------------ header */
 
-
-
-/* ==========================================================================
-   Header
-   ========================================================================== */
-
-
-.header {
-
-
-    width:100%;
-
-    max-width:1100px;
-
-
-    padding:25px;
-
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--u) * 2);
+  padding: calc(var(--u) * 2) calc(var(--u) * 3);
+  border-bottom: 1px solid var(--rule);
 }
 
-
-
-.logo {
-
-
-    font-size:20px;
-
-    font-weight:700;
-
-    letter-spacing:-0.5px;
-
-
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--u);
+  font-family: var(--font-mono);
+  font-size: var(--t-1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
-
-
-
-
-/* ==========================================================================
-   Theme Button
-   ========================================================================== */
-
-
-.theme-btn {
-
-
-    background:
-    transparent;
-
-
-    border:
-
-    1px solid var(--card-border);
-
-
-    color:
-    var(--foreground);
-
-
-    padding:
-    10px 16px;
-
-
-    border-radius:
-    999px;
-
-
-    cursor:pointer;
-
-
-    transition:
-    all var(--transition);
-
-
+.brand-mark {
+  color: var(--accent);
 }
 
+/* ----------------------------------------------------------------- buttons */
 
-
-.theme-btn:hover {
-
-
-    background:
-    var(--input);
-
-
+.btn {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: calc(var(--u) * 1.5) calc(var(--u) * 3);
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  cursor: pointer;
 }
 
-
-
-
-
-/* ==========================================================================
-   Main Container
-   ========================================================================== */
-
-
-.container {
-
-
-    width:100%;
-
-
-    max-width:700px;
-
-
-    padding:
-    20px;
-
-
+.btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
+.btn-ghost {
+  background: transparent;
+}
 
+.btn-primary {
+  width: 100%;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-size: var(--t-0);
+  padding-block: calc(var(--u) * 2.5);
+  font-weight: 700;
+}
 
+.btn-primary:hover {
+  color: var(--accent-ink);
+  filter: brightness(1.1);
+}
 
+/* -------------------------------------------------------------------- wrap */
 
-/* ==========================================================================
-   Hero
-   ========================================================================== */
+.wrap {
+  width: 100%;
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: calc(var(--u) * 3);
+}
 
+@media (max-width: 30rem) {
+  .wrap {
+    padding-inline: calc(var(--u) * 2);
+  }
+}
 
 .hero {
-
-
-    text-align:center;
-
-    margin-bottom:35px;
-
-
+  padding-block: calc(var(--u) * 8) calc(var(--u) * 5);
 }
-
-
 
 .hero h1 {
-
-
-    font-size:
-    clamp(32px,5vw,48px);
-
-
-    letter-spacing:
-    -2px;
-
-
-    font-weight:
-    700;
-
-
+  font-family: var(--font-mono);
+  font-size: var(--t-3);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  margin: 0 0 calc(var(--u) * 3);
 }
 
-
-
-.hero p {
-
-
-    margin-top:15px;
-
-
-    color:
-    var(--muted);
-
-
-    font-size:
-    17px;
-
-
+.lede {
+  font-size: var(--t-1);
+  color: var(--muted);
+  max-width: 38ch;
+  margin: 0;
 }
 
+/* -------------------------------------------------------------------- card */
 
-
-
-/* ==========================================================================
-   Generator Card
-   ========================================================================== */
-
-
-.generator-card {
-
-
-    background:
-    var(--card);
-
-
-    backdrop-filter:
-    blur(20px);
-
-
-    border:
-    1px solid var(--card-border);
-
-
-    border-radius:
-    var(--radius);
-
-
-    padding:
-    35px;
-
-
-    box-shadow:
-    0 20px 60px var(--shadow);
-
-
+.card {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: calc(var(--u) * 4);
 }
 
-
-
-.generator-card h2 {
-
-
-    margin-bottom:25px;
-
-    letter-spacing:-0.5px;
-
-
+@media (max-width: 30rem) {
+  .card {
+    padding: calc(var(--u) * 2.5);
+  }
 }
 
-
-
-
-
-/* ==========================================================================
-   Password Output
-   ========================================================================== */
-
-
-.password-box {
-
-
-    display:flex;
-
-    gap:10px;
-
-
+.modes {
+  display: flex;
+  gap: var(--u);
+  margin-bottom: calc(var(--u) * 4);
 }
 
-
-
-.password-box input {
-
-
-    flex:1;
-
-
-    background:
-    var(--input);
-
-
-    border:
-    1px solid var(--card-border);
-
-
-    padding:
-    15px;
-
-
-    border-radius:
-    12px;
-
-
-    font-size:
-    16px;
-
-
-    color:
-    var(--foreground);
-
-
-    outline:none;
-
-
+.mode {
+  flex: 1;
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: calc(var(--u) * 1.5);
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  cursor: pointer;
 }
 
-
-
-
-.password-box input:focus {
-
-
-    border-color:
-    var(--foreground);
-
-
+.mode.is-active {
+  background: var(--raised);
+  color: var(--ink);
+  border-color: var(--accent);
 }
 
+/* ------------------------------------------------------------------ output */
 
-
-
-/* ==========================================================================
-   Buttons
-   ========================================================================== */
-
-
-button {
-
-
-    font-family:inherit;
-
-
+.output {
+  display: flex;
+  align-items: stretch;
+  gap: calc(var(--u) * 2);
+  margin-bottom: calc(var(--u) * 3);
 }
 
-
-
-#copy-btn,
-.generate {
-
-
-    border:none;
-
-
-    background:
-    var(--button);
-
-
-    color:
-    var(--button-text);
-
-
-    padding:
-    14px 22px;
-
-
-    border-radius:
-    12px;
-
-
-    font-weight:
-    600;
-
-
-    cursor:pointer;
-
-
-    transition:
-    transform .2s ease,
-    opacity .2s ease;
-
-
+.output-text {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-1);
+  line-height: 1.6;
+  padding: calc(var(--u) * 2.5);
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }
 
-
-
-button:hover {
-
-
-    transform:
-    translateY(-2px);
-
-
-    opacity:
-    .85;
-
-
+/* A password is read once and typed once. The eye finds a digit faster among
+   letters when the digit is not the same colour as the letters. */
+.c-digit {
+  color: var(--digit);
 }
 
-
-
-
-
-.generate {
-
-
-    width:100%;
-
-
-    margin-top:25px;
-
-
+.c-symbol {
+  color: var(--symbol);
 }
 
-
-
-
-
-/* ==========================================================================
-   Strength
-   ========================================================================== */
-
-
-.strength {
-
-
-    margin-top:20px;
-
-
-    padding:
-    12px;
-
-
-    background:
-    var(--input);
-
-
-    border-radius:
-    10px;
-
-
-    font-weight:
-    500;
-
-
+.c-upper {
+  color: var(--upper);
 }
 
-
-
-
-/* ==========================================================================
-   Settings
-   ========================================================================== */
-
-
-.setting {
-
-
-    margin-top:25px;
-
-
+.output-actions {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--u));
 }
 
+@media (max-width: 30rem) {
+  .output {
+    flex-direction: column;
+  }
 
+  .output-actions {
+    flex-direction: row;
+  }
 
-.setting label {
-
-
-    display:flex;
-
-
-    justify-content:space-between;
-
-
-    font-weight:500;
-
-
+  .output-actions .btn {
+    flex: 1;
+  }
 }
 
+/* ------------------------------------------------------------------- meter */
 
+.meter {
+  margin-bottom: calc(var(--u) * 4);
+}
+
+.meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--u);
+  margin-bottom: var(--u);
+}
+
+.bits {
+  font-family: var(--font-mono);
+  font-size: var(--t-0);
+  font-variant-numeric: tabular-nums;
+}
+
+.rating {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+.rating[data-level="weak"] { color: var(--weak); }
+.rating[data-level="fair"] { color: var(--fair); }
+.rating[data-level="strong"] { color: var(--strong); }
+.rating[data-level="excellent"] { color: var(--excellent); }
+
+.meter-track {
+  height: calc(var(--u) * 1.5);
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 160ms ease-out;
+}
+
+.hint {
+  font-size: var(--t--1);
+  color: var(--muted);
+  margin: calc(var(--u) * 1.5) 0 0;
+}
+
+/* --------------------------------------------------------------- controls */
+
+.controls {
+  display: grid;
+  gap: calc(var(--u) * 3);
+  margin-bottom: calc(var(--u) * 4);
+}
+
+.controls[hidden] {
+  display: none;
+}
+
+.field-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--u);
+}
+
+.field-head label {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.val {
+  font-family: var(--font-mono);
+  font-size: var(--t-0);
+  font-variant-numeric: tabular-nums;
+}
 
 input[type="range"] {
-
-
-    width:100%;
-
-
-    margin-top:15px;
-
-
+  width: 100%;
+  accent-color: var(--accent);
 }
 
-
-
-
-
-.options {
-
-
-    margin-top:25px;
-
-
+select {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  padding: calc(var(--u) * 1.5);
+  background: var(--raised);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
 }
 
-
-
-.option {
-
-
-    display:flex;
-
-
-    align-items:center;
-
-
-    gap:12px;
-
-
-    padding:
-    12px 0;
-
-
-    color:
-    var(--foreground);
-
-
+.toggles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: calc(var(--u) * 1.5);
 }
 
-
-
-
-.option input {
-
-
-    width:18px;
-
-    height:18px;
-
-
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.5);
+  padding: calc(var(--u) * 1.5);
+  background: var(--raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: var(--t--1);
 }
 
-
-
-
-
-/* ==========================================================================
-   Info Section
-   ========================================================================== */
-
-
-.info {
-
-
-    margin-top:50px;
-
-
+.toggle input {
+  accent-color: var(--accent);
+  width: 1rem;
+  height: 1rem;
+  flex: none;
 }
 
-
-
-.features {
-
-
-    display:grid;
-
-
-    gap:15px;
-
-
-    margin-top:20px;
-
-
+.toggle em {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-style: normal;
 }
 
-
-
-.feature {
-
-
-    padding:
-    20px;
-
-
-    border:
-
-    1px solid var(--card-border);
-
-
-    border-radius:
-    14px;
-
-
-    background:
-    var(--card);
-
-
+.error {
+  margin: calc(var(--u) * 3) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  color: var(--weak);
 }
 
-
-
-.feature p {
-
-
-    margin-top:10px;
-
-
-    color:
-    var(--muted);
-
-
+.error[hidden] {
+  display: none;
 }
 
+/* ------------------------------------------------------------------- notes */
 
-
-
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-
-
-footer {
-
-
-    margin-top:auto;
-
-
-    padding:
-    30px;
-
-
-    color:
-    var(--muted);
-
-
-    font-size:
-    14px;
-
-
+.notes {
+  padding-block: calc(var(--u) * 8);
 }
 
+.notes h2 {
+  font-family: var(--font-mono);
+  font-size: var(--t-1);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: calc(var(--u) * 3);
+}
 
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: calc(var(--u) * 3);
+}
 
+.note h3 {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: var(--u);
+}
 
+.note p {
+  font-size: var(--t--1);
+  color: var(--muted);
+  margin: 0;
+}
 
-/* ==========================================================================
-   Mobile
-   ========================================================================== */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
 
+/* ------------------------------------------------------------------ footer */
 
-@media(max-width:600px){
+.site-footer {
+  border-top: 1px solid var(--rule);
+  padding-block: calc(var(--u) * 4);
+}
 
+.site-footer p {
+  margin: 0;
+  font-size: var(--t--1);
+  color: var(--muted);
+}
 
-    .generator-card {
-
-        padding:
-        22px;
-
-    }
-
-
-
-    .password-box {
-
-        flex-direction:
-        column;
-
-    }
-
-
-
-    #copy-btn {
-
-        width:100%;
-
-    }
-
-
-
+@media print {
+  .site-header,
+  .output-actions,
+  .notes {
+    display: none;
+  }
 }

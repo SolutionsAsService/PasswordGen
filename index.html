@@ -1,324 +1,152 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Secure Password Generator | Advanced Password Security Tool</title>
-
-<meta name="description" content="Generate strong secure passwords with customizable length, numbers, symbols, and uppercase characters.">
-
-<link rel="stylesheet" href="style.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SecurePass — Password &amp; Passphrase Generator</title>
+<meta name="description" content="Generate cryptographically secure passwords and passphrases locally in your browser, with unbiased CSPRNG selection and an entropy readout you can check.">
+<link rel="stylesheet" href="styles.css">
 </head>
-
 
 <body>
 
-
-<!-- HEADER -->
-
-<header class="header">
-
-    <div class="logo">
-        🔐 SecurePass
+<header class="site-header">
+    <div class="brand">
+        <span class="brand-mark" aria-hidden="true">&#9670;</span>
+        <span>SecurePass</span>
     </div>
-
-
-    <button id="theme-switcher" class="theme-btn">
-        🌙 Toggle Theme
-    </button>
-
+    <button id="themeToggle" class="btn btn-ghost" type="button">Light mode</button>
 </header>
 
-
-
-
-<!-- MAIN -->
-
-<main class="container">
-
-
-<section class="hero">
-
-<h1>
-Advanced Password Generator
-</h1>
-
-<p>
-Create cryptographically secure passwords using advanced random generation.
-</p>
-
-</section>
-
-
-
-
-
-<section class="generator-card">
-
-
-<h2>
-Generate Secure Password
-</h2>
-
-
-
-<div class="password-box">
-
-
-<input 
-id="passwordOutput"
-readonly
-placeholder="Your password will appear here..."
->
-
-
-<button id="copy-btn">
-Copy
-</button>
-
-
-</div>
-
-
-
-
-<div id="passwordStrength" class="strength">
-Strength: Waiting...
-</div>
-
-
-
-
-
-<!-- LENGTH -->
-
-
-<div class="setting">
-
-
-<label for="length">
-
-Password Length:
-
-<span id="lengthValue">
-16
-</span>
-
-</label>
-
-
-<input
-type="range"
-id="length"
-min="8"
-max="64"
-value="16"
->
-
-
-</div>
-
-
-
-
-
-<!-- OPTIONS -->
-
-
-<div class="options">
-
-
-<label class="option">
-
-<input 
-type="checkbox"
-id="includeCaps"
-checked
->
-
-Include Uppercase Letters
-
-</label>
-
-
-
-
-<label class="option">
-
-<input 
-type="checkbox"
-id="includeNumbers"
-checked
->
-
-Include Numbers
-
-</label>
-
-
-
-
-<label class="option">
-
-<input 
-type="checkbox"
-id="includeSpecial"
-checked
->
-
-Include Special Characters
-
-</label>
-
-
-
-</div>
-
-
-
-
-
-<button 
-id="generate-btn"
-class="generate">
-
-Generate Password
-
-</button>
-
-
-
-</section>
-
-
-
-
-
-
-
-
-
-<!-- SECURITY INFO -->
-
-
-<section class="info">
-
-
-<h2>
-Why Use A Secure Password Generator?
-</h2>
-
-
-<div class="features">
-
-
-<div class="feature">
-
-<h3>
-🛡 Strong Encryption
-</h3>
-
-<p>
-Uses your browser's secure cryptographic random number generator instead of predictable randomness.
-</p>
-
-</div>
-
-
-
-
-<div class="feature">
-
-<h3>
-⚡ Instant Generation
-</h3>
-
-<p>
-Passwords are created locally on your device and are never transmitted online.
-</p>
-
-</div>
-
-
-
-
-
-<div class="feature">
-
-<h3>
-🔑 Custom Requirements
-</h3>
-
-<p>
-Guarantees uppercase letters, numbers, and special characters when enabled.
-</p>
-
-</div>
-
-
-
-</div>
-
-
-</section>
-
-
-
-
-
+<main class="wrap">
+
+    <section class="hero">
+        <h1>Secure passwords,<br>generated on your device</h1>
+        <p class="lede">
+            Unbiased randomness from the browser's CSPRNG, with an entropy readout you
+            can check instead of a vague strength label.
+        </p>
+    </section>
+
+    <section class="card">
+
+        <div class="modes" role="tablist" aria-label="Generator mode">
+            <button id="modePassword" class="mode is-active" type="button" role="tab" aria-selected="true">Password</button>
+            <button id="modePassphrase" class="mode" type="button" role="tab" aria-selected="false">Passphrase</button>
+        </div>
+
+        <div class="output">
+            <output id="output" class="output-text" aria-live="polite"></output>
+            <div class="output-actions">
+                <button id="copyBtn" class="btn" type="button">Copy</button>
+                <button id="regenBtn" class="btn btn-ghost" type="button" aria-label="Generate another">&#8635;</button>
+            </div>
+        </div>
+
+        <div class="meter">
+            <div class="meter-head">
+                <span id="entropyBits" class="bits">&mdash;</span>
+                <span id="entropyLabel" class="rating">&mdash;</span>
+            </div>
+            <div class="meter-track"><div id="entropyFill" class="meter-fill"></div></div>
+            <p id="crackTime" class="hint"></p>
+        </div>
+
+        <div id="passwordControls" class="controls">
+            <div class="field">
+                <div class="field-head">
+                    <label for="length">Length</label>
+                    <output id="lengthOut" class="val">20</output>
+                </div>
+                <input id="length" type="range" min="8" max="64" step="1" value="20">
+            </div>
+
+            <div class="toggles" role="group" aria-label="Character sets">
+                <label class="toggle"><input id="optLower" type="checkbox" checked><span>Lowercase <em>a&ndash;z</em></span></label>
+                <label class="toggle"><input id="optUpper" type="checkbox" checked><span>Uppercase <em>A&ndash;Z</em></span></label>
+                <label class="toggle"><input id="optDigit" type="checkbox" checked><span>Digits <em>0&ndash;9</em></span></label>
+                <label class="toggle"><input id="optSymbol" type="checkbox" checked><span>Symbols <em>!@#$</em></span></label>
+                <label class="toggle"><input id="optNoAmbiguous" type="checkbox"><span>No look-alikes <em>0 O l 1</em></span></label>
+                <label class="toggle"><input id="optNoRepeat" type="checkbox"><span>No adjacent repeats <em>aa, 11</em></span></label>
+            </div>
+        </div>
+
+        <div id="passphraseControls" class="controls" hidden>
+            <div class="field">
+                <div class="field-head">
+                    <label for="words">Words</label>
+                    <output id="wordsOut" class="val">6</output>
+                </div>
+                <input id="words" type="range" min="3" max="12" step="1" value="6">
+            </div>
+
+            <div class="field">
+                <div class="field-head"><label for="separator">Separator</label></div>
+                <select id="separator">
+                    <option value="-">hyphen</option>
+                    <option value=" ">space</option>
+                    <option value=".">dot</option>
+                    <option value="_">underscore</option>
+                    <option value="">none</option>
+                </select>
+            </div>
+
+            <div class="toggles" role="group" aria-label="Passphrase options">
+                <label class="toggle"><input id="optCapitalize" type="checkbox"><span>Capitalize words</span></label>
+                <label class="toggle"><input id="optAddNumber" type="checkbox"><span>Append a number</span></label>
+            </div>
+        </div>
+
+        <button id="generateBtn" class="btn btn-primary" type="button">Generate</button>
+        <p id="error" class="error" role="alert" hidden></p>
+
+    </section>
+
+    <section class="notes">
+        <h2>How it works</h2>
+        <div class="note-grid">
+            <div class="note">
+                <h3>Unbiased selection</h3>
+                <p>
+                    Characters are drawn with rejection sampling over
+                    <code>crypto.getRandomValues</code>, so no character is favoured by
+                    modulo bias. Shuffles use the same method.
+                </p>
+            </div>
+            <div class="note">
+                <h3>Honest entropy</h3>
+                <p>
+                    The bits shown are computed from the actual pool size and length,
+                    not guessed from a rule of thumb. Passphrase entropy uses the exact
+                    word-list size.
+                </p>
+            </div>
+            <div class="note">
+                <h3>Nothing leaves the page</h3>
+                <p>
+                    Generation runs entirely in this document. There is no network
+                    request and no analytics; the only thing saved is your theme choice.
+                </p>
+            </div>
+            <div class="note">
+                <h3>Crack-time estimate</h3>
+                <p>
+                    Shown as an order of magnitude at an assumed 10<sup>10</sup>
+                    guesses/second offline. Real time depends on the site's hashing,
+                    which this page cannot know.
+                </p>
+            </div>
+        </div>
+    </section>
 
 </main>
 
-
-
-
-
-<footer>
-
-<p>
-© 2026 SecurePass — Local Password Generation Tool
-</p>
-
+<footer class="site-footer">
+    <p>SecurePass &mdash; runs locally in your browser.</p>
 </footer>
-
-
-
-
 
 <script src="script.js"></script>
 
-
-<script>
-
-
-// Update slider number live
-
-const slider =
-document.getElementById("length");
-
-
-const lengthValue =
-document.getElementById("lengthValue");
-
-
-slider.addEventListener(
-"input",
-()=>{
-
-lengthValue.innerText =
-slider.value;
-
-});
-
-
-</script>
-
-
-
 </body>
-
 </html>
